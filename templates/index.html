@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SUPA DUKA POS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-lg-7">
+            <h1 class="display-4 fw-bold lh-1 mb-3">Welcome to <span class="text-primary">SUPA DUKA POS</span></h1>
+            <p class="lead">Your complete Point of Sale solution for modern retail businesses.</p>
+            <p>Manage your inventory, track sales, and grow your business with our easy-to-use POS system.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                <a class="btn btn-primary btn-lg px-4 me-md-2" href="/register" role="button">Get Started</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <img src="{{ url_for('static', filename='businessman-talking-phone.jpg') }}" 
+                 alt="SUPA DUKA POS" 
+                 class="img-fluid rounded-3 shadow"
+                 style="width: 100%; height: auto;">
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="row mt-4 g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <i class="fas fa-user-plus fa-2x text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Easy Registration</h5>
+                    <p class="card-text">Sign up quickly and start using our POS system in minutes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <i class="fas fa-shield-alt fa-2x text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Secure Login</h5>
+                    <p class="card-text">Your data is protected with secure authentication.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <i class="fas fa-headset fa-2x text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">24/7 Support</h5>
+                    <p class="card-text">We're here to help you whenever you need assistance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
