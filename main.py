@@ -72,6 +72,7 @@ def dashboard():
     username = session.get('username', 'User')
 
     try:
+        # 1. Fetch all actual products from the database for this user
         products = db_session.query(Product).filter(Product.user_id == user_id).all()
 
         labels = []
@@ -79,6 +80,8 @@ def dashboard():
 
         for p in products:
             labels.append(p.name)
+            # 2. Use your existing logic to get the current stock level
+            # This ensures the chart shows exactly what's in your store
             current_stock = available_stock(user_id, p.id)
             values.append(current_stock)
             

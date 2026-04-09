@@ -3,18 +3,22 @@
 {% block content %}
 <div class="card shadow-sm border-0 mt-3">
     <div class="card-header bg-white">
-        <h5 class="mb-0 fw-bold"><i class="fas fa-boxes text-primary me-2"></i>Product Inventory Levels</h5>
+        <h5 class="mb-0 fw-bold">
+            <i class="fas fa-boxes text-primary me-2"></i>Product Inventory Levels
+        </h5>
     </div>
     <div class="card-body">
-        {% if labels %}
-        <div style="height: 400px;">
-            <canvas id="productsChart"></canvas>
-        </div>
+        {# Check if labels exist and actually have items #}
+        {% if labels and labels|length > 0 %}
+            <div style="height: 400px;">
+                <canvas id="productsChart"></canvas>
+            </div>
         {% else %}
-        <div class="text-center py-5">
-            <i class="fas fa-exclamation-circle fa-3x text-light mb-3"></i>
-            <p class="text-muted">No products found in your database.</p>
-        </div>
+            <div class="text-center py-5">
+                <i class="fas fa-exclamation-circle fa-3x text-light mb-3"></i>
+                <p class="text-muted">No products found in your database.</p>
+                <a href="/products" class="btn btn-primary btn-sm">Add Your First Product</a>
+            </div>
         {% endif %}
     </div>
 </div>
