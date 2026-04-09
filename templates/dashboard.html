@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - SUPADUKA POS{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js">
+
+    <style>
+        :root { --sidebar-dark: #0a0a0a; }
+        body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; }
+        .navbar { margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .nav-link:hover { color: #0d6efd !important; }
+        .alert { border: none; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--sidebar-dark) !important;">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">
+      <span class="text-primary"><i class="fas fa-cash-register me-2"></i></span>SUPADUKA
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard"><i class="fas fa-chart-line me-1"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/products"><i class="fas fa-boxes me-1"></i> Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/sales"><i class="fas fa-shopping-cart me-1"></i> Sales</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/stock"><i class="fas fa-warehouse me-1"></i> Stocks</a>
+        </li>
+      </ul>
+      
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-light small">
+           Logged in as: <strong class="text-info">{{ session.get('username', 'Guest') }}</strong>
+        </span>
+        <a class="btn btn-outline-danger btn-sm px-3" href="/logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container mb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-info-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable({
+            "pageLength": 10,
+            "responsive": true
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div style="width: 80%; margin: auto;">
+  <canvas id="posChart"></canvas>
+</div>
+
+<script>
+  const ctx = document.getElementById('posChart');
+
+  new Chart(ctx, {
+    type: 'bar', // You can change this to 'line' for revenue trends
+    data: {
+      labels: ['Electronics', 'Groceries', 'Apparel', 'Home & Garden', 'Health'],
+      datasets: [{
+        label: 'Daily Sales (KES)',
+        data: [4500, 7200, 3100, 1500, 2800],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 99, 132, 0.7)'
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Sales Performance by Category'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            // Adds a currency symbol to the Y-axis
+            callback: function(value) {
+              return 'KSh ' + value;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+ 
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from database import register as db_register, login as db_login
+
+app = Flask(__name__)
+app.secret_key = "Sup@duka123!!"
+
+# ── Index Route ── footer SHOWS ──
+@app.route('/home')
+def index():
+    if "username" in session:
+        return redirect(url_for('dashboard'))
+    return render_template('index.html')              
+
+# ── Register Route ── footer HIDDEN ──
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+    if request.method == 'POST':
+        username         = request.form['username']
+        email            = request.form['email']
+        password         = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            return render_template('register.html',
+                                   error='Passwords do not match!',
+                                   hide_footer=True)   
+        result = db_register(username, email, password, confirm_password)
+        if result:
+            return redirect(url_for('login_page'))
+        else:
+            return render_template('register.html',
+                                   error='User already exists!',
+                                   hide_footer=True)   
+
+    return render_template('register.html', hide_footer=True)  
+
+
+# ── Login Route ── footer HIDDEN ──
+@app.route('/login', methods=['GET', 'POST'])
+def login_page():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        user = db_login(username, password)
+        if user:
+            session['username'] = user.username
+            return redirect(url_for('dashboard'))
+        else:
+            return render_template('login.html',
+                                   error="Invalid username or password!",
+                                   hide_footer=True)   
+
+    return render_template('login.html', hide_footer=True)     
+
+
+# ── Dashboard Route ── footer HIDDEN ──
+@app.route('/dashboard')
+def dashboard():
+    if 'username' not in session:
+        return redirect(url_for('index.html'))
+    return render_template('dashboard.html',
+                           hide_footer=True,          
+                           username=session['username'])
+
+
+# ── Logout Route ──
+@app.route('/logout')
+def logout():
+    # Clear the session
+    session.clear()
+    # Show success message
+    flash('You have been logged out successfully!', 'success')
+    # Redirect to login page
+    return redirect(url_for('/')) 
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+    http://127.0.0.1:5000/logout
+
+
+.container .header{
+    position:fixed;
+    top:0;
+    right:0;
+    width:80vw;
+    height:10vh;
+    background: white;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:0 4px 8px 0 rgba(0,0,0,0.2)
+}
+    .container.header.nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f5f5f5;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+     .nav input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+    .nav input:focus {
+        border-color: #89CFF0;
+    }
+
+    .nav button {
+        background: #89CFF0;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .nav button i {
+        color: white;
+        font-size: 16px;
+    }
+
+    .nav button:hover {
+        background: #89CFF0;
+    }
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>Admin Panel - SUPADUKA POS</title>
+</head>
+
+<body>
+    <div class="side-menu">
+        <div class="brand-name">
+            <h1>SUPA DUKA</h1>
+        </div>
+        <ul>
+            <li><i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard</li>
+            <li><i class="fas fa-users"></i>&nbsp; Customers</li>
+            <li><i class="fas fa-box"></i>&nbsp; Products</li>
+            <li><i class="fas fa-chart-line"></i>&nbsp; Sales</li>
+            <li><i class="fas fa-warehouse"></i>&nbsp; Stocks</li>
+        </ul>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div class="nav">
+                <input type="text" placeholder="Search...">
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="user">
+                <a href="/logout"class="btn">Log out</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
