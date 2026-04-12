@@ -131,7 +131,7 @@ def all_sales(user_id):
      .order_by(Sale.id.desc())\
      .all()
 
-def delete_sale(user_id, sale_id):                           # ✅ added — useful for sales page
+def delete_sale(user_id, sale_id):                           
     sale = session.query(Sale).filter(
         Sale.id == sale_id,
         Sale.user_id == user_id
@@ -176,10 +176,10 @@ def add_stock(user_id, pid, quantity):
     session.commit()
     print(f"Stock added.")
 
-def all_stocks(user_id):                                     # ✅ added — useful for stock page
+def all_stocks(user_id):                                     
     return session.query(Stock).filter(Stock.user_id == user_id).all()
 
-def delete_stock(user_id, stock_id):                         # ✅ added — useful for stock page
+def delete_stock(user_id, stock_id):                        
     stock = session.query(Stock).filter(
         Stock.id == stock_id,
         Stock.user_id == user_id
