@@ -12,7 +12,8 @@ from database import (
     delete_product,
     Product, 
     Sale,
-    session as db_session 
+    session as db_session,
+    available_stock 
 )
 
 app = Flask(__name__)
@@ -71,21 +72,18 @@ def dashboard():
     user_id = session['user_id']
     username = session.get('username', 'User')
 
-    try:
-        # 1. Fetch all actual products from the database for this user
-        products = db_session.query(Product).filter(Product.user_id == user_id).all()
+    products = db_session.query(Product).filter(Product.user_id == user_id).all()
 
-        labels = []
-        values = []
+    labels = []
+    values = []
 
-        for p in products:
-            labels.append(p.name)
-            current_stock = available_stock(user_id, p.id)
-            values.append(current_stock)
-            
-    except Exception as e:
-        print(f"Error: {e}")
-        labels, values = [], []
+    for p in products:
+        labels.append(p.name)
+        current_stock = available_stock(user_id, p.id)
+        values.append(current_stock)
+
+    print("DEBUG labels:", labels)
+    print("DEBUG values:", values)
 
     return render_template(
         'chart.html', 
