@@ -80,8 +80,6 @@ def dashboard():
 
         for p in products:
             labels.append(p.name)
-            # 2. Use your existing logic to get the current stock level
-            # This ensures the chart shows exactly what's in your store
             current_stock = available_stock(user_id, p.id)
             values.append(current_stock)
             
